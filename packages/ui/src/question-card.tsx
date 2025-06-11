@@ -5,7 +5,6 @@ export interface QuestionCardProps {
   answers: string[];
   selectedAnswer?: string;
   onAnswerSelect: (answer: string) => void;
-  isAnswered: boolean;
   isTimeUp?: boolean;
   isTransitioning?: boolean;
   className?: string;
@@ -16,13 +15,12 @@ export function QuestionCard({
   answers,
   selectedAnswer,
   onAnswerSelect,
-  isAnswered,
   isTimeUp = false,
   isTransitioning = false,
   className = "",
 }: QuestionCardProps): JSX.Element {
   const handleAnswerClick = (answer: string) => {
-    if (isAnswered || isTimeUp || isTransitioning) return;
+    if (isTimeUp || isTransitioning) return;
     onAnswerSelect(answer);
   };
 
@@ -30,34 +28,29 @@ export function QuestionCard({
     <div className={`bg-white rounded-lg shadow-md p-6 ${className}`}>
       {/* Question Header */}
       <div className="mb-6">
-        <h2 className="text-xl font-semibold text-gray-800">
-          {question}
-        </h2>
+        <h2 className="text-xl font-semibold text-gray-800">{question}</h2>
       </div>
 
       {/* Answer Options */}
       <div className="space-y-3">
         {answers.map((answer, index) => {
-          const isSelected = selectedAnswer === answer;
-          
           return (
             <button
               key={index}
               onClick={() => handleAnswerClick(answer)}
-              disabled={isAnswered || isTimeUp || isTransitioning}
+              disabled={isTimeUp || isTransitioning}
               className={`w-full p-4 text-left rounded-lg border-2 transition-all duration-200 ${
-                isSelected
-                  ? 'border-blue-500 bg-blue-500 text-blue-900 shadow-lg'
-                  : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50'
+                selectedAnswer == answer
+                  ? "border-blue-500 bg-blue-500 text-blue-900 shadow-lg"
+                  : "border-gray-200 hover:border-blue-300 hover:bg-blue-50"
               } ${
-                isAnswered || isTimeUp || isTransitioning
-                  ? 'cursor-not-allowed opacity-75'
-                  : 'cursor-pointer hover:shadow-sm'
+                isTimeUp || isTransitioning
+                  ? "cursor-not-allowed opacity-75"
+                  : "cursor-pointer hover:shadow-sm"
               }`}
             >
               <div className="flex items-center justify-between">
                 <span className="font-medium">{answer}</span>
-              
               </div>
             </button>
           );
@@ -65,4 +58,4 @@ export function QuestionCard({
       </div>
     </div>
   );
-} 
+}

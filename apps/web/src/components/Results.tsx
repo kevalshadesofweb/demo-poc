@@ -6,13 +6,21 @@ import { decodeHtml } from "@/utils/quiz";
 import { ResultCard } from "@repo/ui";
 
 export function Results() {
-  const { settings, questions, answers, score, resetQuiz } = useQuizStore();
+  const { settings, questions, resetQuiz } = useQuizStore();
 
   if (!settings || !questions) {
     return null;
   }
+  if (!questions.length) return null;
+
+  // Calculate score based on questions with 'selected' field that match correct_answer
+  const score = questions.filter(
+    (question) =>
+      question.selected && question.selected === question.correct_answer
+  ).length;
 
   const percentage = Math.round((score / questions.length) * 100);
+
   const getScoreColor = (percentage: number) => {
     if (percentage >= 80) return "text-green-600";
     if (percentage >= 60) return "text-yellow-600";
@@ -20,11 +28,11 @@ export function Results() {
   };
 
   const getSkippedCount = () => {
-    return answers.filter((answer) => answer === "SKIPPED").length;
+    return questions.filter((question) => !question.selected).length;
   };
 
   const getAnsweredCount = () => {
-    return answers.filter((answer) => answer !== "SKIPPED").length;
+    return questions.filter((question) => question.selected).length;
   };
 
   return (
@@ -113,9 +121,10 @@ export function Results() {
 
           <div className="space-y-4">
             {questions.map((question, index) => {
-              const userAnswer = answers[index];
-              const isCorrect = userAnswer === question.correct_answer;
-              const isSkipped = userAnswer === "SKIPPED";
+              const userAnswer = question.selected;
+              const isCorrect =
+                userAnswer === decodeHtml(question.correct_answer);
+              const isSkipped = !userAnswer;
               const allAnswers = [
                 ...question.incorrect_answers,
                 question.correct_answer,

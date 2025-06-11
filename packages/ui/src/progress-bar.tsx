@@ -16,7 +16,7 @@ export function ProgressBar({
   color = "blue",
 }: ProgressBarProps): JSX.Element {
   const percentage = Math.min((current / total) * 100, 100);
-  
+
   const getColorClasses = () => {
     switch (color) {
       case "green":
@@ -45,4 +45,4 @@ export function ProgressBar({
       )}
     </div>
   );
-} 
+}

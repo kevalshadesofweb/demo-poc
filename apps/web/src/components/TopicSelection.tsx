@@ -4,10 +4,7 @@ import { useState } from "react";
 import { useCategories } from "@/hooks/useCategories";
 import { useQuizStore } from "@/store/useQuizStore";
 import type { QuizSettings } from "@/types/quiz";
-
-const DIFFICULTIES = ["easy", "medium", "hard"] as const;
-const QUESTION_COUNTS = [5, 10, 15, 20];
-const TIME_OPTIONS = [15, 30, 45, 60]; // seconds
+import { DIFFICULTIES, QUESTION_COUNTS, TIME_OPTIONS } from "@/constants/quiz";
 
 export function TopicSelection() {
   const { data: categories, isLoading, error } = useCategories();
@@ -51,10 +48,14 @@ export function TopicSelection() {
       <div className="space-y-6">
         {/* Category Selection */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label
+            htmlFor="category"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
             Category
           </label>
           <select
+            name="category"
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(Number(e.target.value))}
             className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
